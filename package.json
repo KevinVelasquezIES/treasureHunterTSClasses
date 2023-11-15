@@ -51,6 +51,7 @@
     "vitest": "^0.34.1"
   },
   "dependencies": {
+    "@pixi/sound": "^5.2.2",
     "pixi.js": "^7.3.2"
   }
 }

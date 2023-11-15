@@ -5,8 +5,8 @@ export const manifest: AssetsManifest = {
     {
       name: "StaticImages",
       assets: {
-        Dungeon: "../../public/dungeon.png",
-        Door: "../../public/door.png",
+        Dungeon: "/dungeon.png",
+        Door: "/door.png",
         Treasure: "../../public/treasure.png",
       },
     },
@@ -47,14 +47,11 @@ export const manifest: AssetsManifest = {
     {
       name: "SoundTracks",
       assets: {
-        Hard_NES: "../../public/sounds/levelplane__hard_nes.mp3",
-        Win_Sound:
-          "../../public/sounds/littlerobotsoundfactory__jingle_win_00.wav",
-        Lose_Sound:
-          "../../public/sounds/littlerobotsoundfactory__jingle_lose_01.wav",
-        Sad_Song_Loop: "../../public/sounds/norameld__sad-song-loop.wav",
-        Soundtrack_keitwenn:
-          "../../public/sounds/keitwenn__game-soundtrack-4.wav",
+        Hard_NES: "/sounds/levelplane__hard_nes.mp3",
+        Win_Sound: "/sounds/littlerobotsoundfactory__jingle_win_00.wav",
+        Lose_Sound: "/sounds/littlerobotsoundfactory__jingle_lose_01.wav",
+        Sad_Song_Loop: "/sounds/norameld__sad-song-loop.wav",
+        Soundtrack_keitwenn: "/sounds/keitwenn__game-soundtrack-4.wav",
       },
     },
   ],
