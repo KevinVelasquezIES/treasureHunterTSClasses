@@ -1,9 +1,9 @@
 import { AnimatedSprite, Container, Texture } from "pixi.js";
-import { blob } from "stream/consumers";
 
 export class Blob extends Container {
-  constructor() {
+  constructor(velocity: number) {
     super();
+
     const blobFrames: Array<string> = [
       "Blob_00",
       "Blob_01",
@@ -19,11 +19,26 @@ export class Blob extends Container {
       "Blob_11",
     ];
 
-    // const blobAnimated: AnimatedSprite = new AnimatedSprite(
-    //   blobFrames.map(stringy) => Texture.from(stringy));
-
-    const blobAnimated: AnimatedSprite = new AnimatedSprite(
+    const animatedBlob: AnimatedSprite = new AnimatedSprite(
       blobFrames.map(stringy => Texture.from(stringy))
     );
+
+    this.addChild(animatedBlob);
+
+    // Now... what did we learn about assigning functions...
+    // animatedBlob.onFrameChange = this.onBlobFrameChange.bind(this);
+    animatedBlob.play();
+    animatedBlob.animationSpeed = velocity / 100;
+  }
+
+  /* private onBlobFrameChange(currentFrame: any): void {
+    console.log("Vegito's current frame is", currentFrame);
+  } */
+  blobDown() {
+    console.log("Down");
+  }
+
+  blobUp() {
+    console.log("Up");
   }
 }
