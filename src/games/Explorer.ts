@@ -16,6 +16,14 @@ interface ExplorerStates {
 export class Explorer extends Container {
   private states: ExplorerStates;
   private animatedExplorer: AnimatedSprite;
+  private explorerVelocity: number = 5;
+  private movement: {
+    up: boolean;
+    down: boolean;
+    left: boolean;
+    right: boolean;
+  };
+
   constructor() {
     super();
 
@@ -34,7 +42,6 @@ export class Explorer extends Container {
       "Explorer_11",
     ];
 
-    //Diferentes estados posibles del sprite
     this.states = {
       up: explorerFrames.slice(9).map(frame => Texture.from(frame)),
       down: explorerFrames.slice(0).map(frame => Texture.from(frame)),
@@ -46,16 +53,38 @@ export class Explorer extends Container {
       moveLRight: explorerFrames.slice(6, 9).map(frame => Texture.from(frame)),
     };
 
-    //Estado de animacion inicial del sprite
     this.animatedExplorer = new AnimatedSprite(this.states.down);
-
     this.addChild(this.animatedExplorer);
-
     this.animatedExplorer.anchor.set(0.5);
 
-    //Inicializacion y llamado del evento para los teclados
+    this.movement = { up: false, down: false, left: false, right: false };
+
+    this.setupGameLoop();
     Keyboard.initialize();
     window.addEventListener("keyChanged", this.handleKeyChange.bind(this));
+  }
+
+  private setupGameLoop(): void {
+    const update = () => {
+      if (this.movement.up) {
+        this.animatedExplorer.y -= this.explorerVelocity;
+        this.startAnimation(this.states.moveUp);
+      }
+      if (this.movement.down) {
+        this.animatedExplorer.y += this.explorerVelocity;
+        this.startAnimation(this.states.moveDown);
+      }
+      if (this.movement.left) {
+        this.animatedExplorer.x -= this.explorerVelocity;
+        this.startAnimation(this.states.moveLeft);
+      }
+      if (this.movement.right) {
+        this.animatedExplorer.x += this.explorerVelocity;
+        this.startAnimation(this.states.moveLRight);
+      }
+      requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
   }
 
   private handleKeyChange(event: Event): void {
@@ -65,29 +94,25 @@ export class Explorer extends Container {
       isPressed: boolean;
     };
 
-    if (isPressed) {
-      this.handleKeyPress(key);
-    } else {
-      this.handleKeyRelease(key);
-    }
-  }
-
-  private handleKeyPress(key: string): void {
     switch (key) {
       case "ArrowUp":
-        this.startAnimation(this.states.moveUp);
+        this.movement.up = isPressed;
         break;
       case "ArrowDown":
-        this.startAnimation(this.states.moveDown);
+        this.movement.down = isPressed;
         break;
       case "ArrowLeft":
-        this.startAnimation(this.states.moveLeft);
+        this.movement.left = isPressed;
         break;
       case "ArrowRight":
-        this.startAnimation(this.states.moveLRight);
+        this.movement.right = isPressed;
         break;
       default:
         break;
+    }
+
+    if (!isPressed) {
+      this.handleKeyRelease(key); // Llamada al método para liberación de tecla
     }
   }
 
@@ -106,22 +131,24 @@ export class Explorer extends Container {
   private handleKeyRelease(key: string): void {
     switch (key) {
       case "ArrowUp":
-        this.startAnimation(this.states.up);
+        this.animatedExplorer.textures = this.states.up;
         this.animatedExplorer.stop();
+        this.movement.up = false;
         break;
       case "ArrowDown":
-        this.startAnimation(this.states.down);
+        this.animatedExplorer.textures = this.states.down;
         this.animatedExplorer.stop();
-
+        this.movement.down = false;
         break;
       case "ArrowLeft":
-        this.startAnimation(this.states.left);
+        this.animatedExplorer.textures = this.states.left;
         this.animatedExplorer.stop();
-
+        this.movement.left = false;
         break;
       case "ArrowRight":
-        this.startAnimation(this.states.right);
+        this.animatedExplorer.textures = this.states.right;
         this.animatedExplorer.stop();
+        this.movement.right = false;
         break;
       default:
         break;
