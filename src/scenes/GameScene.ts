@@ -30,6 +30,7 @@ export class GameScene extends Container implements IScene {
     // Add the explorer sprite and position it on screen
     this.explorer = new Explorer();
     this.explorer.position.set(68, 512 / 2 - this.explorer.height / 2);
+    console.log(this.explorer.position);
 
     // Show all sprites on GameScene
     this.addChild(
@@ -45,18 +46,27 @@ export class GameScene extends Container implements IScene {
     sound.volume("Hard_NES", 0.3);
   }
 
-  public update(framesPassed: number): void {
-    // Lets move clampy!
-    /*     this.clampy.x += this.clampyVelocity * framesPassed;
+  public checkCollisions(): void {
+    // Obtener dimensiones y posiciones del Explorer y el Blob
+    const explorerBounds = this.explorer.getBounds();
+    const blobBounds = this.blob.getBounds();
 
-    if (this.clampy.x > Manager.width) {
-      this.clampy.x = Manager.width;
-      this.clampyVelocity = -this.clampyVelocity;
+    // Verificar si los límites (bounds) se superponen
+    if (
+      explorerBounds.x + explorerBounds.width > blobBounds.x &&
+      explorerBounds.x < blobBounds.x + blobBounds.width &&
+      explorerBounds.y + explorerBounds.height > blobBounds.y &&
+      explorerBounds.y < blobBounds.y + blobBounds.height
+    ) {
+      // Acción cuando hay colisión: Cambiar el alpha del Explorer
+      this.explorer.alpha = 0.5; // O cualquier otro valor de alpha que desees
+    } else {
+      // Si no hay colisión, restaurar el alpha del Explorer a su valor normal
+      this.explorer.alpha = 1.0;
     }
+  }
 
-    if (this.clampy.x < 0) {
-      this.clampy.x = 0;
-      this.clampyVelocity = -this.clampyVelocity;
-    } */
+  public update(framesPassed: number): void {
+    this.checkCollisions();
   }
 }

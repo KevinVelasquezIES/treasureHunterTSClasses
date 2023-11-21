@@ -1,5 +1,6 @@
 import { AnimatedSprite, Container, Texture } from "pixi.js";
 import { Keyboard } from "../utils/Keyboard";
+import { Manager } from "../scenes/Manager";
 
 interface ExplorerStates {
   //Estados de animacion dentro del array de frames
@@ -82,6 +83,29 @@ export class Explorer extends Container {
         this.animatedExplorer.x += this.explorerVelocity;
         this.startAnimation(this.states.moveLRight);
       }
+
+      const explorerGlobalPosition = this.animatedExplorer.getGlobalPosition();
+      // console.log("explorerGlobalPosition: ", explorerGlobalPosition);
+
+      if (explorerGlobalPosition.x < 40) {
+        //Se toma 40 por 32 pixeles del borde y 8 pixeles para que el explorer no quede atravezando el muro)
+        this.animatedExplorer.x =
+          this.animatedExplorer.x - explorerGlobalPosition.x + 40;
+        this.startAnimation(this.states.left);
+      } else if (explorerGlobalPosition.x > Manager.width - 40) {
+        this.animatedExplorer.x = 404; // 404 signicia 512 del canvas menos 32 del borde menos 68 de la posicion global del explorer menos 8 para que no quede atravenzado el muro
+        this.startAnimation(this.states.right);
+      }
+
+      if (explorerGlobalPosition.y < 40) {
+        //Se toma 40 por 32 pixeles del borde y 8 pixeles para que el explorer no quede atravezando el muro)
+        this.animatedExplorer.y =
+          this.animatedExplorer.y - explorerGlobalPosition.y + 40;
+        this.startAnimation(this.states.up);
+      } else if (explorerGlobalPosition.y > Manager.height - 42) {
+        this.animatedExplorer.y = 226; // 226 signicia 512 del canvas menos 32 del borde menos 240 de la posicion global del explorer menos 10 para que no quede atravenzado el muro
+        this.startAnimation(this.states.down);
+      }
       requestAnimationFrame(update);
     };
     requestAnimationFrame(update);
@@ -153,5 +177,7 @@ export class Explorer extends Container {
       default:
         break;
     }
+    console.log("Explorer X,Y: ", this.animatedExplorer.getGlobalPosition());
+    console.log("Explorer Local: ", this.animatedExplorer.position);
   }
 }
