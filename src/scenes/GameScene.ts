@@ -6,6 +6,7 @@ import { sound } from "@pixi/sound";
 import { Explorer } from "../games/Explorer";
 import { Blob } from "../games/Blob";
 import { BlobMoving } from "../games/BlobMoving";
+import { HealthBar } from "../games/HealthBar";
 
 export class GameScene extends Container implements IScene {
   private dungeon: Sprite;
@@ -13,6 +14,7 @@ export class GameScene extends Container implements IScene {
   private treasure: Treasure;
   private explorer: Explorer;
   private blob: Blob;
+  private heatlhBar: HealthBar;
   constructor() {
     super();
 
@@ -31,6 +33,8 @@ export class GameScene extends Container implements IScene {
     this.explorer = new Explorer();
     this.explorer.position.set(68, 512 / 2 - this.explorer.height / 2);
     console.log(this.explorer.position);
+    //Add Health bar and position it on screen
+    this.heatlhBar = new HealthBar(330, 15, 150, 10, 100);
 
     // Show all sprites on GameScene
     this.addChild(
@@ -38,7 +42,8 @@ export class GameScene extends Container implements IScene {
       this.door,
       this.treasure,
       this.blob,
-      this.explorer
+      this.explorer,
+      this.heatlhBar
     );
 
     //Game sound
@@ -50,6 +55,8 @@ export class GameScene extends Container implements IScene {
     // Obtener dimensiones y posiciones del Explorer y el Blob
     const explorerBounds = this.explorer.getBounds();
     const blobBounds = this.blob.getBounds();
+    let healthValue: number = 100;
+    console.log(healthValue);
 
     // Verificar si los límites (bounds) se superponen
     if (
@@ -60,6 +67,9 @@ export class GameScene extends Container implements IScene {
     ) {
       // Acción cuando hay colisión: Cambiar el alpha del Explorer
       this.explorer.alpha = 0.5; // O cualquier otro valor de alpha que desees
+      healthValue -= 5;
+      this.heatlhBar.updateValue(healthValue);
+      console.log(healthValue);
     } else {
       // Si no hay colisión, restaurar el alpha del Explorer a su valor normal
       this.explorer.alpha = 1.0;
