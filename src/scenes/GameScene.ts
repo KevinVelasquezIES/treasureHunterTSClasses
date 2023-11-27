@@ -7,6 +7,7 @@ import { Explorer } from "../games/Explorer";
 import { Blob } from "../games/Blob";
 import { BlobMoving } from "../games/BlobMoving";
 import { HealthBar } from "../games/HealthBar";
+import { LoseScene } from "./LoseScene";
 
 export class GameScene extends Container implements IScene {
   private dungeon: Sprite;
@@ -55,8 +56,9 @@ export class GameScene extends Container implements IScene {
     // Obtener dimensiones y posiciones del Explorer y el Blob
     const explorerBounds = this.explorer.getBounds();
     const blobBounds = this.blob.getBounds();
-    let healthValue: number = 100;
-    console.log(healthValue);
+    const treasureBounds = this.treasure.getBounds();
+    let healthValue: number = this.heatlhBar.currentValue;
+    // console.log(healthValue);
 
     // Verificar si los límites (bounds) se superponen
     if (
@@ -67,12 +69,26 @@ export class GameScene extends Container implements IScene {
     ) {
       // Acción cuando hay colisión: Cambiar el alpha del Explorer
       this.explorer.alpha = 0.5; // O cualquier otro valor de alpha que desees
-      healthValue -= 5;
+      healthValue -= 1;
       this.heatlhBar.updateValue(healthValue);
       console.log(healthValue);
     } else {
-      // Si no hay colisión, restaurar el alpha del Explorer a su valor normal
+      // Si no hay colisión, resturar el alpha del Explorer a su valor normal
       this.explorer.alpha = 1.0;
+    }
+    if (healthValue < 0) {
+      Manager.changeScene(new LoseScene());
+    }
+    if (
+      explorerBounds.x + explorerBounds.width > treasureBounds.x &&
+      explorerBounds.x < treasureBounds.x + treasureBounds.width &&
+      explorerBounds.y + explorerBounds.height > treasureBounds.y &&
+      explorerBounds.y < treasureBounds.y + treasureBounds.height
+    ) {
+      // Acción cuando hay colisión: Pegar el treasure del explorer
+      const offset = 15;
+      this.treasure.x = this.explorer.position.x + offset;
+      this.treasure.y = this.explorer.position.y + offset;
     }
   }
 

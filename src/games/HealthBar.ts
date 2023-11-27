@@ -6,7 +6,7 @@ export class HealthBar extends Container {
   private barWidth: number;
   private barHeight: number;
   private maxValue: number;
-  private currentValue: number;
+  public currentValue: number;
 
   constructor(
     x: number,
