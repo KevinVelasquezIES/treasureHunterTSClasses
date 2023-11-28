@@ -16,6 +16,7 @@ export class GameScene extends Container implements IScene {
   private explorer: Explorer;
   private blob: Blob;
   private heatlhBar: HealthBar;
+
   constructor() {
     super();
 
@@ -28,8 +29,6 @@ export class GameScene extends Container implements IScene {
     this.treasure = new Treasure();
     this.treasure.x = 512 - this.treasure.width - 48;
     this.treasure.y = 512 / 2 - this.treasure.height / 2;
-    //Add the blob and position it on screen
-    this.blob = new BlobMoving(512, 512);
     // Add the explorer sprite and position it on screen
     this.explorer = new Explorer();
     this.explorer.position.set(68, 512 / 2 - this.explorer.height / 2);
@@ -37,12 +36,16 @@ export class GameScene extends Container implements IScene {
     //Add Health bar and position it on screen
     this.heatlhBar = new HealthBar(330, 15, 150, 10, 100);
 
+    //Add blobs!
+    const numberOfBlobs = 5; // Puedes ajustar el número de blobs aquí
+    this.blob = new BlobMoving(numberOfBlobs, 512, 512);
+
     // Show all sprites on GameScene
     this.addChild(
       this.dungeon,
       this.door,
-      this.treasure,
       this.blob,
+      this.treasure,
       this.explorer,
       this.heatlhBar
     );
@@ -52,30 +55,30 @@ export class GameScene extends Container implements IScene {
     sound.volume("Hard_NES", 0.3);
   }
 
-  public checkCollisions(): void {
-    // Obtener dimensiones y posiciones del Explorer y el Blob
+  public update(framesPassed: number): void {
+    this.checkCollisions();
+  }
+
+  private checkCollisions(): void {
     const explorerBounds = this.explorer.getBounds();
     const blobBounds = this.blob.getBounds();
     const treasureBounds = this.treasure.getBounds();
     let healthValue: number = this.heatlhBar.currentValue;
-    // console.log(healthValue);
 
-    // Verificar si los límites (bounds) se superponen
     if (
       explorerBounds.x + explorerBounds.width > blobBounds.x &&
       explorerBounds.x < blobBounds.x + blobBounds.width &&
       explorerBounds.y + explorerBounds.height > blobBounds.y &&
       explorerBounds.y < blobBounds.y + blobBounds.height
     ) {
-      // Acción cuando hay colisión: Cambiar el alpha del Explorer
-      this.explorer.alpha = 0.5; // O cualquier otro valor de alpha que desees
+      this.explorer.alpha = 0.5;
       healthValue -= 1;
       this.heatlhBar.updateValue(healthValue);
       console.log(healthValue);
     } else {
-      // Si no hay colisión, resturar el alpha del Explorer a su valor normal
       this.explorer.alpha = 1.0;
     }
+
     if (healthValue < 0) {
       Manager.changeScene(new LoseScene());
     }
@@ -90,9 +93,5 @@ export class GameScene extends Container implements IScene {
       this.treasure.x = this.explorer.position.x + offset;
       this.treasure.y = this.explorer.position.y + offset;
     }
-  }
-
-  public update(framesPassed: number): void {
-    this.checkCollisions();
   }
 }
