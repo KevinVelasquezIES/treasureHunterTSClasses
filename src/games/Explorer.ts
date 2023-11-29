@@ -17,7 +17,7 @@ interface ExplorerStates {
 export class Explorer extends Container {
   private states: ExplorerStates;
   private animatedExplorer: AnimatedSprite;
-  private explorerVelocity: number = 5;
+  private explorerVelocity: number = 3;
   private movement: {
     up: boolean;
     down: boolean;
