@@ -61,7 +61,7 @@ export class GameScene extends Container implements IScene {
     }
 
     //Game sound
-    // sound.play("Hard_NES", { loop: true });
+    sound.play("Hard_NES", { loop: true });
     sound.volume("Hard_NES", 0.3);
   }
 
@@ -84,7 +84,7 @@ export class GameScene extends Container implements IScene {
         explorerBounds.y < blobBounds.y + blobBounds.height
       ) {
         this.explorer.alpha = 0.5;
-        healthValue -= 2;
+        healthValue -= 3;
         this.heatlhBar.updateValue(healthValue);
         console.log(healthValue);
       } else {
@@ -102,9 +102,11 @@ export class GameScene extends Container implements IScene {
       explorerBounds.y < treasureBounds.y + treasureBounds.height
     ) {
       // Acción cuando hay colisión: Pegar el treasure del explorer
-      Treasure.explorerTookTreasure(true);
-    } else {
-      Treasure.explorerTookTreasure(false);
+      this.treasure.followExplorer(this.explorer.getExplorerGlobalPosition());
+      /*   console.log(
+        "Explorer position to treasure: ",
+        this.explorer.getExplorerGlobalPosition()
+      ); */
     }
 
     if (

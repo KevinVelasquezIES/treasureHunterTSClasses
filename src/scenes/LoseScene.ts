@@ -1,6 +1,7 @@
 import { Container, Sprite, Text } from "pixi.js";
 import { Door } from "../games/Door";
 import { IScene } from "./Manager";
+import { sound } from "@pixi/sound";
 
 export class LoseScene extends Container implements IScene {
   private dungeon: Sprite;
@@ -24,6 +25,11 @@ export class LoseScene extends Container implements IScene {
     loseText.y = 256;
 
     this.addChild(this.dungeon, this.door, loseText);
+
+    //Game sound stop and win sound on
+    sound.stop("Hard_NES");
+    sound.play("Lose_Sound");
+    sound.volume("Lose_Sound", 0.3);
   }
   update(framesPassed: number): void {
     throw new Error("Method not implemented.");
